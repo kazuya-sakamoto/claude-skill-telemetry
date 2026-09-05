@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { execFileSync } from "node:child_process";
-import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { repoKey } from "../src/datadir.js";
 
 /**
  * 手で叩いたときの経路。dist を子プロセスで叩き、標準出力・標準エラー・終了コードだけ見る。
@@ -24,6 +24,8 @@ function tmp(prefix: string): string {
 
 /** since は必須キーなので、設定を置くテストは最低限これを書く。 */
 const MIN = '{"since":"1970-01-01"}';
+/** 身元を ~/.claude.json に依存させない設定。CI や新しいマシンには無いファイルなので、書き込み経路のテストはこちらを使う。 */
+const WITH_ID = '{"since":"1970-01-01","identity":{"machineId":"ci-runner"}}';
 
 function repo(config?: string): string {
   const d = tmp("cst-cli-");
@@ -61,7 +63,7 @@ function run(args: string[], o: { data?: string; state?: string; home?: string }
 }
 
 function stateOf(dir: string, repoRoot: string): { outcome: string; detail?: string } | null {
-  const p = join(dir, "state", `${createHash("sha256").update(repoRoot).digest("hex").slice(0, 16)}.json`);
+  const p = join(dir, "state", `${repoKey(repoRoot)}.json`);
   return existsSync(p) ? JSON.parse(readFileSync(p, "utf8")) : null;
 }
 
@@ -110,13 +112,11 @@ describe("--sync の入口", () => {
 
 describe("同時実行の防止", () => {
   function holdLock(state: string, repoRoot: string): void {
-    mkdirSync(join(state, "locks", createHash("sha256").update(repoRoot).digest("hex").slice(0, 16)), {
-      recursive: true,
-    });
+    mkdirSync(join(state, "locks", repoKey(repoRoot)), { recursive: true });
   }
 
   it("他のプロセスが同期中なら書き込みに入らない", () => {
-    const d = repo(MIN);
+    const d = repo(WITH_ID);
     const state = tmp("cst-state-");
     holdLock(state, d);
     const { code, err } = run(["--repo", d], { state });
@@ -125,7 +125,7 @@ describe("同時実行の防止", () => {
   });
 
   it("読み取りだけの --dry-run はロックに妨げられない", () => {
-    const d = repo(MIN);
+    const d = repo(WITH_ID);
     const state = tmp("cst-state-");
     holdLock(state, d);
     const { code, out } = run(["--dry-run", "--repo", d], { state });
