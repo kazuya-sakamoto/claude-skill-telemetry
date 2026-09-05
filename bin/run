@@ -1,0 +1,7 @@
+#!/bin/sh
+# ネイティブ配布の Claude Code では PATH に node が無いことがある（R6）。
+# 見つからなければ何もせず成功する —— 記録の欠落はセッションを止める理由にならない。
+DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+if command -v node >/dev/null 2>&1; then exec node "$DIR/dist/cli.js" "$@"; fi
+if command -v bun  >/dev/null 2>&1; then exec bun  "$DIR/dist/cli.js" "$@"; fi
+exit 0

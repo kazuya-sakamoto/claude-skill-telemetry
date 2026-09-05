@@ -1,0 +1,9 @@
+{
+  "name": "claude-skill-telemetry",
+  "version": "0.1.0",
+  "description": "セッション開始時に transcript を走査し、スキル実行のコストをスキル配下の NDJSON に記録する",
+  "author": {
+    "name": "kazuya-sakamoto"
+  },
+  "hooks": "./hooks/hooks.json"
+}

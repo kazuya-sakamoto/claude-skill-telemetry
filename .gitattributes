@@ -1,0 +1,2 @@
+# レビュー時に生成物の差分でノイズを出さない。CI は再ビルドして diff を検証する
+dist/cli.js linguist-generated=true -diff

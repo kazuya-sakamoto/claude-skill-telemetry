@@ -1,0 +1,23 @@
+{
+  "name": "claude-skill-telemetry",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Claude Code の transcript からスキル実行を遡って復元し、スキル配下の NDJSON に記録する",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "esbuild src/cli.ts --bundle --platform=node --target=node18 --format=esm --outfile=dist/cli.js --banner:js=\"#!/usr/bin/env node\"",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "npm run typecheck",
+    "parity": "esbuild tools/parity/snapshot.ts --bundle --platform=node --format=esm --outfile=tools/parity/out/snapshot.mjs --log-level=warning && node tools/parity/out/snapshot.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "esbuild": "^0.24.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

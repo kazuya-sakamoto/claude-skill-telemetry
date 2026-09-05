@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "statusMessage": "スキル実行ログを同期",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/bin/run\" --sync 2>/dev/null || true",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}

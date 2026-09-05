@@ -1,0 +1,11 @@
+node_modules/
+
+# 実 transcript を使うローカル検証。合成 fixture 以外は絶対にコミットしない
+tools/parity/out/
+tools/parity/*.jsonl
+
+# 個人スキルとそのログ（`_` 規約は gitignore の一適用例にすぎない）
+.claude/skills/_*/
+
+# 記録を止めたいマシンの opt-out マーカー
+.claude/no-skill-log

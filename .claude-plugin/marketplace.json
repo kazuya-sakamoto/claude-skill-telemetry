@@ -1,0 +1,14 @@
+{
+  "name": "claude-skill-telemetry",
+  "owner": {
+    "name": "kazuya-sakamoto"
+  },
+  "description": "スキル実行のコストを transcript から記録するプラグインを配る、単一プラグインのマーケットプレイス",
+  "plugins": [
+    {
+      "name": "claude-skill-telemetry",
+      "source": "./",
+      "description": "スキル実行のコストを transcript から記録する"
+    }
+  ]
+}
